@@ -142,7 +142,12 @@ bool rgb_matrix_indicators_user(void) {
   return true;
 }
 
+uint8_t mod_state;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // 現在の modifier キー状態を保存しておく
+  mod_state = get_mods();
+
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
@@ -190,7 +195,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             rgblight_sethsv(152,255,255);
         }
         return false;
+
+   // Ctrl+H を Backspace にする
+   case KC_H:
+        {
+        static bool bskey_registered;
+
+        // H キーが押されたとき
+        if (record->event.pressed) {
+            if (mod_state & MOD_MASK_CTRL) {
+
+                del_mods(MOD_MASK_CTRL);
+                register_code(KC_BSPC);
+
+                bskey_registered = true;
+
+                // modifier キー状態をもとに戻しておく
+                set_mods(mod_state);
+
+                return false;
+            }
+        // H キーが離されたとき
+        } else {
+            if (bskey_registered) {
+                unregister_code(KC_BSPC);
+                bskey_registered = false;
+                return false;
+            }
+        }
+        // 通常の H キーの処理
+        return true;
+     }
   }
+
   return true;
 }
 
