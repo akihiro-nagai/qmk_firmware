@@ -226,6 +226,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // 通常の H キーの処理
         return true;
      }
+
+   // Ctrl+\ を Esc にする
+   case KC_BSLS:
+        {
+        static bool esckey_registered;
+
+        // \ キーが押されたとき
+        if (record->event.pressed) {
+            if (mod_state & MOD_MASK_CTRL) {
+
+                del_mods(MOD_MASK_CTRL);
+                register_code(KC_ESCAPE);
+
+                esckey_registered = true;
+
+                // modifier キー状態をもとに戻しておく
+                set_mods(mod_state);
+
+                return false;
+            }
+        // \ キーが離されたとき
+        } else {
+            if (esckey_registered) {
+                unregister_code(KC_ESCAPE);
+                esckey_registered = false;
+                return false;
+            }
+        }
+        // 通常の \ キーの処理
+        return true;
+     }
   }
 
   return true;
