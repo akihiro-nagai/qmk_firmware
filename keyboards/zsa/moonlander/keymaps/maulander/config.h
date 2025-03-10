@@ -2,7 +2,7 @@
 #define TAPPING_TERM 150
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "mQzdj/400Aeq"
+#define SERIAL_NUMBER "mQzdj/DzzGZE"
 #define LAYER_STATE_8BIT
 #define COMBO_COUNT 1
 
